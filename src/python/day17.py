@@ -35,7 +35,7 @@ def neighs(pos):
     
 def sim(d):
     d_c = collections.defaultdict(bool)
-    keys = set(d.keys())
+    keys = {pos for pos in d if d[pos]}
     all_neighs = set()
     for pos in keys:
         for neig in neighs(pos):
