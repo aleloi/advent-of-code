@@ -32,11 +32,12 @@ def neighs(pos):
     for dpos in itertools.product([-1, 0, 1], repeat=len(pos)):
         if dpos != tuple([0]*len(pos)):
             yield tuple(x+dx for x, dx in zip(pos, dpos))
-    
+        
 def sim(d):
-    d_c = collections.defaultdict(bool)
+    d_c = {} #collections.defaultdict(bool) <- slower
     keys = {pos for pos in d if d[pos]}
     all_neighs = set()
+    
     for pos in keys:
         for neig in neighs(pos):
             all_neighs.add(neig)
@@ -44,18 +45,16 @@ def sim(d):
     for pos in keys|all_neighs:
         active_neigh = 0
         for neig in neighs(pos):
-            if d[neig]:
+            if neig in d and d[neig]:
                 active_neigh += 1
-        if d[pos] and active_neigh in [2, 3]:
+        if pos in d and active_neigh in [2, 3]:
             d_c[pos] = True
-        elif not d[pos] and active_neigh == 3:
+        elif pos not in d and active_neigh == 3:
             d_c[pos] = True
-        else:
-            d_c[pos] = False
     return d_c
 
-d3D = collections.defaultdict(bool)
-d4D = collections.defaultdict(bool)
+d3D = {} #collections.defaultdict(bool)
+d4D = {} #collections.defaultdict(bool)
 for i, row in enumerate(inp.strip().split("\n")):
     for j, col in enumerate(row):
         if col == '#':
